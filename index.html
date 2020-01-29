@@ -1,0 +1,128 @@
+<html>
+  <head>
+    <title>Lesons15</title>
+    <style>
+    	.host {
+    		display: flex;
+    	}
+    	.btn {
+    		flex: 1;
+    		height: 50px;
+    		margin: 5px;
+			padding: 2px;
+    	}
+
+    	.square {
+    		flex: 1;
+    		height: 200px;
+    		background-color: blue;
+    		margin: 10px;
+    		padding: 5px;
+    		display: flex;
+			justify-content: center;
+			align-items: center;
+    	}
+    	.toggleBlock {
+    		height: 200px;
+    		background-color: lightgray;
+    	}
+    	#popUpDiv {
+			background-color: white;
+			height: auto;
+			padding: 1pt;
+    	}
+    </style>
+  </head>
+  <body>
+  	<div id="Ex1">
+  		<h1>Ex1</h1>
+  		<div class="host">
+	  		<div class="square" data-title="This is first blue block"></div>
+	  		<div class="square" data-title="This is second blue block"></div>
+	  		<div class="square" data-title="This is third blue block"></div>
+	  		<div class="square" data-title="This is fourth blue block"></div>
+	  		<div class="square" data-title="This is fifth blue block"></div>
+  		</div>
+  	</div>
+
+  	<div class="toggleHost">
+  		<h1>Ex2</h1>
+		<div class="host">
+			<button class="btn" data-child="#firstContent">First header</button>
+			<button class="btn" data-child="#secondContent">Second header</button>
+			<button class="btn" data-child="#thirdContent">Third header</button>
+			<button class="btn" data-child="#fourthContent">Fourth header</button>
+			<button class="btn" data-child="#fifthContent">fifth header</button>
+		</div>
+  		
+  		<div class="child">
+  			<div id="firstContent" class="toggleBlock" hidden>
+  				<p>This is first header content</p>
+	  		</div>
+	  		<div id="secondContent" class="toggleBlock" hidden>
+	  			<p>This is second header content</p>
+	  		</div>
+	  		<div id="thirdContent" class="toggleBlock" hidden>
+	  			<p>This is third header content</p>
+	  		</div>
+	  		<div id="fourthContent" class="toggleBlock" hidden>
+	  			<p>This is fourth header content</p>
+	  		</div>
+	  		<div id="fifthContent" class="toggleBlock" hidden>
+	  			<p>This is fifth header content</p>
+	  		</div>
+  		</div>
+  		
+  	</div>
+
+  	<script>
+  		const $toggleHost = document.querySelector(".toggleHost");
+
+  		let currentElement = null;
+
+		document.addEventListener("mouseover", event => {
+			if (currentElement) return;
+
+  			const popUpTitle = event.target.dataset.title;
+  			if (popUpTitle) {
+  				currentElement = event.target;
+
+  				const $popUpDiv = document.createElement("div");
+  				$popUpDiv.id = "popUpDiv";
+  				$popUpDiv.innerHTML = `<p> ${popUpTitle} </p>`;
+  				currentElement.append($popUpDiv);
+  			}
+  		});
+
+
+  		document.addEventListener("mouseout", event => {
+  			if (!currentElement) return;
+
+  			let relatedTarget = event.relatedTarget;
+  			while (relatedTarget) {
+  				if (relatedTarget == currentElement) return;
+
+  				relatedTarget = relatedTarget.parentNode;
+  			}
+
+  			currentElement.querySelector("#popUpDiv").remove();
+  			currentElement = null;
+  		});
+
+  		$toggleHost.addEventListener("click", event => {
+  			const targetId = event.target.dataset.child;
+  			if (targetId == null) return;
+
+  			const $targetEl = $toggleHost.querySelector(targetId);
+
+  			if (!$targetEl.hidden) {
+  				$targetEl.hidden = true;
+  				return;
+  			}
+
+			$toggleHost.querySelector(".child").childNodes.forEach(el => { el.hidden = true;});
+  			$targetEl.hidden = false;
+  		})
+  	</script>
+  </body>
+</html>
